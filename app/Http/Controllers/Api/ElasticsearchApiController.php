@@ -25,235 +25,49 @@ use Log;
 class ElasticsearchApiController extends Controller
 {
 
-    private function getFilter($context)
-    {
-        $years_bool_query = null;
-        if (isset($context["years"])) {
-            $years = $context["years"];
-            $years_query = [];
-            foreach ($years as $year) {
-                $year_query = ['term' => [
-                    "year" => $year
-                ]];
-                $years_query[] = $year_query;
-            }
-            $years_bool_query = ['should' => $years_query];
-        }
-
-
-        $organizes_bool_query = null;
-        if (isset($context["organizes"])) {
-            $organizes = $context["organizes"];
-            $organizes_query = [];
-            foreach ($organizes as $organize) {
-                $organize_query = ['match_phrase' => [
-                    "organizes_data.name" => $organize
-                ]];
-                $organizes_query[] = $organize_query;
-            }
-            $organizes_bool_query = ['should' => $organizes_query];
-        }
-
-        $journals_bool_query = null;
-        if (isset($context["journals"])) {
-            $journals = $context["journals"];
-            $journals_query = [];
-            foreach ($journals as $journal) {
-                $journal_query =
-                    ['match_phrase' => [
-                        "journal_data.name" => $journal
-                    ]];
-                $journals_query[] = $journal_query;
-            }
-            $journals_bool_query = ['should' => $journals_query];
-        }
-
-        $authors_bool_query = null;
-        if (isset($context["authors"])) {
-            $authors = $context["authors"];
-            $authors_query = [];
-            foreach ($authors as $author) {
-                $author_query =
-                    ['nested' => [
-                        'path' => 'authors',
-                        'query' => [
-                            'match_phrase' => [
-                                'authors.name' => $author
-                            ]
-                        ]
-                    ]];
-                $authors_query[] = $author_query;
-            }
-            $authors_bool_query = ['should' => $authors_query];
-        }
-
-        $subjects_bool_query = null;
-        if (isset($context["subjects"])) {
-            $subjects = $context["subjects"];
-            $subjects_query = [];
-            foreach ($subjects as $subject) {
-                $subject_query =
-                    ['match_phrase' => [
-                        "subjects.name" => $subject
-                    ]];
-                $subjects_query[] = $subject_query;
-            }
-            $subjects_bool_query = ['should' => $subjects_query];
-        }
-
-        $numbers_bool_query = null;
-        if (isset($context["numbers"]) && $context["numbers"] != "" && $context["numbers"][0] != null) {
-            $numbers = $context["numbers"];
-            $numbers_query = [];
-            foreach ($numbers as $number) {
-                $number_query =
-                    ['query_string' => [
-                        'default_field' => 'number',
-                        "query" => $number
-                    ]];
-                $numbers_query[] = $number_query;
-            }
-            $numbers_bool_query = ['should' => $numbers_query];
-        }
-
-        $volumes_bool_query = null;
-        if (isset($context["volumes"]) && $context["volumes"] != "" && $context["volumes"][0] != null) {
-            $volumes = $context["volumes"];
-            $volumes_query = [];
-            foreach ($volumes as $volume) {
-                $volume_query =
-                    ['query_string' => [
-                        'default_field' => 'volume',
-                        "query" => $volume
-                    ]];
-                $volumes_query[] = $volume_query;
-            }
-            $volumes_bool_query = ['should' => $volumes_query];
-        }
-
-
-        // article must citation scopus
-        $scopus_bool_query = null;
-        if (isset($context["must_scopus"]) && $context["must_scopus"] == true) {
-
-            $scopus_query = (object)array(
-                'range' => ["citations.typeCitation.citation_scopus_isi" => [
-                    "gte" => 1
-                ]]);
-
-            $scopus_bool_query = ['should' => $scopus_query];
-        }
-
-        $must_filter = [];
-        if (isset($years_bool_query)) {
-            $must_filter[] = ['bool' => $years_bool_query];
-        }
-
-        if (isset($organizes_bool_query)) {
-            $must_filter[] = ['bool' => $organizes_bool_query];
-        }
-
-        if (isset($journals_bool_query)) {
-            $must_filter[] = ['bool' => $journals_bool_query];
-        }
-
-        if (isset($authors_bool_query)) {
-            $must_filter[] = ['bool' => $authors_bool_query];
-        }
-        if (isset($subjects_bool_query)) {
-            $must_filter[] = ['bool' => $subjects_bool_query];
-        }
-        if (isset($numbers_bool_query)) {
-            $must_filter[] = ['bool' => $numbers_bool_query];
-        }
-        if (isset($volumes_bool_query)) {
-            $must_filter[] = ['bool' => $volumes_bool_query];
-        }
-
-        // articles must bool query
-        if (isset($scopus_bool_query)) {
-            $must_filter[] = ['bool' => $scopus_bool_query];
-        }
-        return $must_filter;
-    }
-
     private function buildAndExecuteQuery($context, $field_search_query)
     {
 
-        //filter
-        //$context[years, organizes,journals]
-        $filter = [
-            'bool' => [
-                'must' => $this->getFilter($context)
-            ]
-        ];
-
         // build query filter + search
         $bool = [
-            'must' => $field_search_query,
-            'filter' => $filter
+            'must' => $field_search_query
         ];
         $query = ['bool' => $bool];
 
 
         // aggs
         $aggs = [
-            'journals' => VciQueryES::param_journals(),
-            'organizes' => VciQueryES::param_organizes(),
-            'organize_count' => VciQueryES::param_organize_count(),
-            'years' => VciQueryES::param_years(),
-            'authors' => VciQueryES::param_authors(),
-            'author_count' => VciQueryES::param_author_count(),
-            'subjects' => VciQueryES::param_subjects(),
-            'citation_vci' => VciQueryES::param_citation_vci(),
-            'citation_scopus_isi' => VciQueryES::param_scopus_isi(),
-            'citation_other' => VciQueryES::param_citation_other(),
-            'sum_citation' => VciQueryES::param_sum_citation(),
-            'citations' => VciQueryES::param_citations(),
+            'years' => [
+                'terms' => [
+                    'field' => 'production_year',
+                    'order' => [
+                        '_term' => 'asc'
+                    ]
+                ]
+            ]
         ];
-
-        if (isset($context["field"]) && $context["field"] == 'author' && isset($context["text"]) && $context != '') {
-            $aggs['author_analytic'] = VciQueryES::param_sum_self_citation_author($context["text"]);
-        }
-
-        if (isset($context["field"]) && $context["field"] == 'journal' && isset($context["text"]) && $context != '') {
-            $aggs['journal_analytic'] = VciQueryES::param_citation_self_journal();
-//            $aggs['hindex'] = VciQueryES::param_hindex();
-        }
-
-        if (isset($context["field"]) && $context["field"] == 'article_id' && isset($context["text"]) && $context != '') {
-            $aggs['article_analytic'] = VciQueryES::param_citation_self_article();
-        }
-
 
         // sort
         $mapping_sort_with_es = [
             'relevance' => '_score',
             'title' => 'title',
-            'cites_count' => 'cites_count',
-            'year' => 'year'
+            'year' => 'production_year',
+            'imdb' => 'imdb_index'
         ];
 
         $field_sort = isset($context["sort-col"]) ? $mapping_sort_with_es[$context["sort-col"]] : $mapping_sort_with_es['relevance'];
+
         $sort = [
             $field_sort => [
                 'order' => isset($context["sort-dir"]) ? $context["sort-dir"] : 'desc'
             ]
         ];
 
-        $_source = ["id",
-            "title",
-            "year",
-            "journal_data.name",
-            "journal_data.id",
-            "volume",
-            "number",
-            "authors", "abstract", "cites_count"];
         // highlight
         $highlight = ["fields" => [
             "title" => new \stdClass(),
-            "journal_data.name" => new \stdClass(),
-            "authors.name" => new \stdClass(),
+            "production_year" => new \stdClass(),
+            "body" => new \stdClass(),
         ],
             "pre_tags" => "<b>",
             "post_tags" => "</b>"
@@ -267,12 +81,11 @@ class ElasticsearchApiController extends Controller
          * Query
          */
         $params = [
-            'index' => 'test',
-            'type' => 'article',
+            'index' => 'imdb',
+            'type' => 'film',
             'body' => [
                 'query' => $query,
                 'sort' => $sort,
-                '_source' => $_source,
                 'highlight' => $highlight,
                 'aggs' => $aggs,
                 'from' => $from,
@@ -284,24 +97,10 @@ class ElasticsearchApiController extends Controller
 //        return $params;
 //        log::debug(response()->json($params));
         $response = VciQueryES::getClientES()->search($params);
-//        return $response;
+        return $response;
         $searchArticleExtractor = new SearchArticleExtractor();
         $output = $searchArticleExtractor->extractSearchArticle($response, $context);
-        // dd($output);
-        // xử lý statistic từng trường hợp khác nhau
-        $commonExtractor = new CommonExtractor();
-        if (isset($context["field"]) && $context["field"] == 'author' && isset($context["text"]) && $context != '') {
-            $output["citation_self_author"] = $commonExtractor->extractCitationSelfAuthor($response["aggregations"]["author_analytic"]);
-        }
 
-        if (isset($context["field"]) && $context["field"] == 'journal' && isset($context["text"]) && $context != '') {
-            $output["citation_self_journal"] = $commonExtractor->extractStatisticCitations($response["aggregations"]["journal_analytic"]);
-//            $output["hindex"] = $commonExtractor->extractHIndex($response["aggregations"]["hindex"]);
-        }
-
-        if (isset($context["field"]) && $context["field"] == 'article_id' && isset($context["text"]) && $context != '') {
-            $output["citation_self_article"] = $commonExtractor->extractStatisticCitations($response["aggregations"]["article_analytic"]);
-        }
         return $output;
     }
 
@@ -318,7 +117,6 @@ class ElasticsearchApiController extends Controller
      */
     public function serviceSearchArticleFromElasticSearch($context)
     {
-
         if (isset($context["field"]) && isset($context["text"]) && $context["text"] != "" && $context["field"] != "") {
             $field_search_query = isset($context["match_phrase"]) ? QueryHelper::makeQueryByField($context['field'], $context['text'], $context["match_phrase"]) : QueryHelper::makeQueryByField($context['field'], $context['text']);
         }
@@ -329,56 +127,16 @@ class ElasticsearchApiController extends Controller
         return $output;
     }
 
-
-    public function searchArticleAdvanced($context)
-    {
-        $field_search_query = QueryHelper::buildQuery($context["search_advanced"]);
-
-        $output = $this->buildAndExecuteQuery($context, $field_search_query);
-
-        return $output;
-    }
-
-
-    private function testModeSearchAdvance()
-    {
-        $context["sort-col"] = "title"; //sort
-        $context["sort-dir"] = "desc"; // sort
-        $context["page"] = 0; // paginate offset
-        $context["perPage"] = 10; // paginate
-        //        $context["years"] = [2015]; // filter
-        //        $context["numbers"] = ["2", "3"]; // filter
-        //        $context["volumes"] = ["6"]; // filter
-        //        $context["authors"] = ["Pham Hong Cong"]; // filter
-        //        $context["organizes"] = ["Đại học quốc gia"]; // filter
-        //        $context["journals"] = ["VNU"]; // filter
-        //        $context["subjects"] = ["Khoa học tự nhiên khác"]; // filter
-        // todo: add: $context["search_advanced"] , không truyền text + field như ở basic search
-        $context["search_advanced"] = [['and', 'author', 'Nguyen Dinh Duc'], ['and', 'author', 'Hoang Van Tung']];
-//        $context["search_advanced"] = [['and', 'title', 'Thanh niên', true], ['or', 'title', 'đa dạng sinh học', true], ['or', 'title', 'đời sống xã hội', false]];
-
-        return $this->searchArticleAdvanced($context);
-    }
-
     private function testModeSearch()
     {
-        $context["field"] = "journal";
-        $context["text"] = "Acta Mathematica Vietnamica";
-        $context["match_phrase"] = true;
+        $context["field"] = "title";
+        $context["text"] = "harry potter";
+        $context["match_phrase"] = false;
 
-        $context["must_scopus"] = true; // filter các bài viết có citation_scopus_isi
-
-        $context["sort-col"] = "cites_count"; //sort
+        $context["sort-col"] = "relevance"; //sort
         $context["sort-dir"] = "desc"; // sort
         $context["page"] = 0; // paginate offset
         $context["perPage"] = 10; // paginate
-        $context["years"] = [2015]; // filter
-//        $context["numbers"] = ["2", "3"]; // filter
-//        $context["volumes"] = ["6"]; // filter
-//        $context["authors"] = ["Pham Hong Cong"]; // filter
-//        $context["organizes"] = ["Đại học quốc gia"]; // filter
-//        $context["journals"] = ["VNU"]; // filter
-//        $context["subjects"] = ["Khoa học tự nhiên khác"]; // filter
         $output = $this->serviceSearchArticleFromElasticSearch($context);
         return $output;
 
@@ -389,77 +147,8 @@ class ElasticsearchApiController extends Controller
     // GET /api/elasticsearch/test
     public function test(Request $request)
     {
-
-//        return $this->testModeSearch();
-//        return $this->testModeSearchAdvance();
-//        $context["start"] = 2014;
-//        $context["end"] = 2015;
-        $context = null;
-        return $this->serviceStatisticFromElasticSearch($context);
-
+        return $this->testModeSearch();
     }
-
-    /**
-     * Danh sách thống kê tổng cite, count của các cơ quan, tạp chí
-     * @return array
-     *
-     */
-    public function serviceStatisticFromElasticSearch($context = null)
-    {
-//        Log::debug($context["start"]);
-//        Log::debug($context["end"]);
-
-        $year_start = (isset($context) && isset($context["start_year"]) && $context["start_year"] != null) ? $context["start_year"] : null;
-        $year_end = (isset($context) && isset($context["end_year"]) && $context["end_year"] != null) ? $context["end_year"] : null;
-        $year_query = new \stdClass();
-        if (isset($year_start)) {
-            $year_query->gte = $year_start;
-        }
-        if (isset($year_end)) {
-            $year_query->lte = $year_end;
-        }
-
-        if (isset($year_start) || isset($year_end)) {
-            $query = (object)array(
-                'bool' => [
-                    'filter' => [
-                        'range' => [
-                            'year_num' => $year_query
-                        ]
-                    ]
-                ]
-            );
-        }
-
-        $commonExtractor = new CommonExtractor();
-        $params = [
-            'index' => 'test',
-            'type' => 'article',
-            'body' => [
-                'query' => isset($query) ? $query : (object)[],
-                '_source' => [''],
-                'aggs' => [
-                    'journals' => VciQueryES::param_journals(),
-                    'organizes' => VciQueryES::param_organizes(),
-                ],
-                'size' => 0
-
-            ]
-        ];
-//        Log::debug("cal search: ", $params);
-//        return $params;
-        $response = VciQueryES::getClientES()->search($params);
-        $output = [];
-        if (isset($response["aggregations"]["journals"])) {
-            $output["journals"] = $commonExtractor->extractStatisticjournalFull($response["aggregations"]["journals"]);
-        }
-        if (isset($response["aggregations"]["organizes"])) {
-            $output["organizes"] = $commonExtractor->extractStatisticOrganize($response["aggregations"]["organizes"]);
-        }
-
-        return $output;
-    }
-
 
 }
 
@@ -566,7 +255,6 @@ class QueryHelper
             $tree[] = isset($c[3]) ? self::makeValueNode(count($tree), $c['field'], $c['text'], $root_index, $c['match_phrase']) : self::makeValueNode(count($tree), $c['field'], $c['text'], $root_index);
         }
 
-
         return $tree;
 
     }
@@ -586,35 +274,18 @@ class QueryHelper
     {
         $query = [];
 
-        if ($field == 'author') {
-            $query = ['nested' => [
-                'path' => 'authors',
-                'query' => ['match_phrase' => ['authors.name' => $value]]]];
-        } elseif ($field == 'organize') {
-            $query = ['bool' => ['should' => [
-                ['match_phrase' => ['organizes_data.name' => $value]],
-                ['match_phrase' => ['organizes_data.name_en' => $value]]]]];
-        } elseif ($field == 'article_id') {
-            $query = [['match_phrase' => [
-                'id' => $value]]];
-        } elseif ($field == 'journal') {
-            $query = ['bool' => ['should' => [
-                ['match_phrase' => ['journal_data.name' => $value]],
-                ['match_phrase' => ['journal_data.name_en' => $value]]]]];
+        if ($match_phrase == null || !$match_phrase) {
+            $query = ['multi_match' => [
+                'query' => $value,
+                'fields' => $field,
+                'minimum_should_match' => '50%']];
         } else {
-            if ($match_phrase == null || !$match_phrase) {
-                $query = ['multi_match' => [
-                    'query' => $value,
-                    'fields' => $field,
-                    'minimum_should_match' => '50%']];
-            } else {
-                $query = ['multi_match' => [
-                    'query' => $value,
-                    'fields' => $field,
-                    'minimum_should_match' => '100%']];
-            }
-
+            $query = ['multi_match' => [
+                'query' => $value,
+                'fields' => $field,
+                'minimum_should_match' => '100%']];
         }
+
 
         return $query;
     }
