@@ -1,0 +1,65 @@
+/*
+Color:
+Green: #007f49
+
+*/
+
+.vci-banner {
+    margin: 0 auto;
+}
+
+.page-header {
+    height: inherit;
+}
+
+/*menu*/
+.page-header .page-header-menu {
+    background: #eee;
+}
+
+.page-header .page-header-menu .hor-menu.hor-menu-light .navbar-nav > li > a, .page-header .page-header-menu .hor-menu.hor-menu-light .navbar-nav > li > a > i {
+    color: #007f49;
+}
+
+.page-header .page-header-menu .hor-menu.hor-menu-light .navbar-nav > li:hover > a {
+    color: #ffffff !important;
+    background: #007f49 !important;
+}
+
+li.menu-dropdown.classic-menu-dropdown.active a {
+    background-color: #007f49 !important;
+}
+
+.vci-menu-bar {
+    margin-bottom: 20px;
+}
+
+.btn.green:not(.btn-outline).active, .btn.green:not(.btn-outline):active, .btn.green:not(.btn-outline):hover, .open > .btn.green:not(.btn-outline).dropdown-toggle {
+    background-color: #007f49;
+    border-color: #005833;
+}
+
+.btn.green:not(.btn-outline) {
+    background-color: #007f49;
+    border-color: #005833;
+}
+
+/*pagination*/
+.pagination > .active > span {
+    background-color: #007f49;
+    border-color: #005833;
+}
+
+.pagination > li > a, .pagination > li > span {
+    color: #007f49;
+}
+
+/*Article*/
+.vci-article {
+    margin-top: 10px;
+}
+
+a {
+    /*color: #007f49;*/
+    /*color: #3b4448;*/
+}

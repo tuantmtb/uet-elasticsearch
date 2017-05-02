@@ -1,0 +1,50 @@
+body {
+	background-color: #eff3f8 !important;
+}
+
+div#page-footer {
+	height: 30px;
+	line-height: 30px;
+	border-top: 2px solid #ccc;
+}
+
+div#module9 {
+	width: 102%;
+	margin-left: -3%;
+}
+
+ul.pagination {
+	margin-top: 5rem;
+}
+
+div.refine-content {
+	height: 200px; 
+	overflow: hidden;
+	overflow-y: scroll
+}
+
+div.refine-item-open {
+	padding-top: 10px;
+}
+
+a.btn-filter {
+	margin-left: 82%;
+}
+
+div.content-above, .content-bottom {
+	border: 2px solid gray;
+	padding: 15px;
+	margin-bottom: 5px;
+}
+
+.list_articles {
+	.column-result, .searchPagination, .topBarSearchResult {
+		background-color: #fff !important;
+		border:none !important;
+	}
+
+}
+
+.refine-item, .refine-item-open {
+	background-color: #F8F8F8 !important;
+}
