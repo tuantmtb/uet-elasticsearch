@@ -97,7 +97,7 @@ class ElasticsearchApiController extends Controller
 //        return $params;
 //        log::debug(response()->json($params));
         $response = VciQueryES::getClientES()->search($params);
-        return $response;
+//        return $response;
         $searchArticleExtractor = new SearchArticleExtractor();
         $output = $searchArticleExtractor->extractSearchArticle($response, $context);
 

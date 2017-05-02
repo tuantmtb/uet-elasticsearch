@@ -40,7 +40,6 @@ class CommonExtractor
             $yearInfo = [];
             $yearInfo["year"] = $perYear["key"];
             $yearInfo["count"] = $perYear["doc_count"];
-            $yearInfo["citation"] = $perYear["sum_citation"]["value"];
             $output[] = $yearInfo;
         }
 
