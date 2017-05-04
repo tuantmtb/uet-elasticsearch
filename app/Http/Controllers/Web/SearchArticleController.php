@@ -123,6 +123,9 @@ class SearchArticleController extends Controller
                     if ($highlight->has('title')) {
                         $article['title'] = $highlight->get('title')[0];
                     }
+                    if ($highlight->has('info')) {
+                        $article['info'] = implode('', $highlight->get('info'));
+                    }
                 }
                 return (object)$article;
             });

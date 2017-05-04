@@ -16,14 +16,14 @@
                                         href="javascript:">{!! $article->title !!}</a>
                             </h2>
                             <p class="search-desc">
-                                ID: {{$article->movie_id}}
+                                ID: <a href="javascript:">{{$article->movie_id}}</a>
                             </p>
                             <p class="search-desc">
-                                Năm sản xuất: {{$article->production_year}}
+                                Năm sản xuất: <a href="javascript:">{{$article->production_year}}</a>
                             </p>
 
                             <p class="search-desc">
-                                Tóm tắt: {{$article->info}}
+                                Tóm tắt: <a href="javascript:">{!! $article->info !!}</a>
                             </p>
                         </div>
                         @if(!is_null($article->imdb_index))

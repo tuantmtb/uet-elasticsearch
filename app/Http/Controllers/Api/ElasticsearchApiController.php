@@ -66,8 +66,7 @@ class ElasticsearchApiController extends Controller
         // highlight
         $highlight = ["fields" => [
             "title" => new \stdClass(),
-            "production_year" => new \stdClass(),
-            "body" => new \stdClass(),
+            "info" => new \stdClass(),
         ],
             "pre_tags" => "<b>",
             "post_tags" => "</b>"
