@@ -1,11 +1,7 @@
 @extends('layouts.search_result')
 
 @section('page-title')
-    @if ($request->has('advance'))
-        Tìm kiếm bài báo nâng cao
-    @else
-        Tìm kiếm bài báo có {{VciConstants::SEARCH_ARTICLE_FIELDS[$request->get('field')]}} là "{{$request->get('text', '')}}"
-    @endif
+    Tìm kiếm phim có {{VciConstants::SEARCH_ARTICLE_FIELDS[$request->get('field')]}} là "{{$request->get('text', '')}}"
 @endsection
 
 @section('results')
@@ -14,30 +10,25 @@
             <li class="search-item clearfix">
                 <div class="search-content">
                     <div class="row">
-                        <div class="col-sm-10 col-xs-12">
+                        <div class="@if(!is_null($article->imdb_index)) col-sm-10 @endif col-xs-12">
                             <h2 class="search-title">
                                 {{$pagingMeta['order_num']($index)}}. <a
-                                        href="{{route('article.show', $article->id)}}">{!! $article->title !!}</a>
+                                        href="javascript:">{!! $article->title !!}</a>
                             </h2>
-                            @if(count($article->authors) > 0)
-                                <p class="search-desc">
-                                    Tác giả: {!! VciHelper::authorsShortImplode($article) !!}
-                                </p>
-                            @endif
-                            @if($article->journal)
-                                <p class="search-desc">
-                                    Tạp chí:
-                                    {{Html::link(route('journal.articles', $article->journal_id), $article->journal->name, [], null, false)}}
-                                    <span class="search-desc">
-                                        {!! VciHelper::journalInfo($article->journal, $article->number, $article->volume, $article->year) !!}
-                                    </span>
-                                </p>
-                            @endif
+                            <p class="search-desc">
+                                Năm sản xuất: {{$article->production_year}}
+                            </p>
+
+                            <p class="search-desc">
+                                {{$article->info}}
+                            </p>
                         </div>
-                        <div class="col-sm-2 col-xs-12">
-                            <p class="search-counter-number">{{$article->cites_count ?: 0}}</p>
-                            <p class="search-counter-label uppercase">Trích dẫn</p>
-                        </div>
+                        @if(!is_null($article->imdb_index))
+                            <div class="col-sm-2 col-xs-12">
+                                <p class="search-counter-number">{{$article->imdb_index}}</p>
+                                <p class="search-counter-label uppercase">IMDB</p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </li>
@@ -50,15 +41,6 @@
 @endsection
 
 @section('search-hidden-fields')
-    @if($request->has('advance'))
-        {{Form::hidden('advance', $request->get('advance'))}}
-        @foreach($request->get('terms') as $index => $term)
-            @foreach($term as $key => $value)
-                {{Form::hidden("terms[$index][$key]", $value)}}
-            @endforeach
-        @endforeach
-    @else
-        {{Form::hidden('text', $request->get('text'))}}
-        {{Form::hidden('field', $request->get('field'))}}
-    @endif
+    {{Form::hidden('text', $request->get('text'))}}
+    {{Form::hidden('field', $request->get('field'))}}
 @endsection

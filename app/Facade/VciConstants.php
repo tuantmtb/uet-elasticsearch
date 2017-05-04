@@ -15,19 +15,19 @@ class VciConstants extends Facade
     // --------------------------- DÀNH RIÊNG CHO SEARCH ARTICLE ---------------------
     const SEARCH_ARTICLE_FIELDS = [
         'title' => 'Tiêu đề',
-        'abstract' => 'Tóm tắt',
-        'keyword' => 'Từ khoá',
-        'year' => 'Năm',
-        'author' => 'Tác giả',
-        'journal' => 'Tạp chí',
-        'organize' => 'Cơ quan',
+        'imdb_index' => 'IMDB',
+        'production_year' => 'Năm sản xuất',
+        'info' => 'Thông tin',
+        'movie_id' => 'ID',
     ];
 
     const SEARCH_ARTICLE_SORTS = [
         'relevance' => 'Độ liên quan',
         'title' => 'Tiêu đề',
-        'cites_count' => 'Số trích dẫn',
-        'year' => 'Năm',
+        'imdb_index' => 'IMDB',
+        'production_year' => 'Năm sản xuất',
+        'info' => 'Thông tin',
+        'movie_id' => 'ID',
     ];
 
     const SEARCH_ARTICLE_FILTERS = [

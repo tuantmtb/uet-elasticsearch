@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Tư liệu nghiên cứu Việt Nam',
+    'name' => 'Elasticsearch demo',
 
     /*
     |--------------------------------------------------------------------------
@@ -172,7 +172,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
         EloquentFilter\ServiceProvider::class,
-        Spatie\Permission\PermissionServiceProvider::class,
+        //Spatie\Permission\PermissionServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,

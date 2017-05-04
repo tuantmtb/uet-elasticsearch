@@ -1,3 +1,7 @@
+.page-header {
+    height: auto;
+}
+
 /*Bootstrap extended pull*/
 .pull-right-not-xs, .pull-right-not-sm, .pull-right-not-md, .pull-right-not-lg{
     float: right;

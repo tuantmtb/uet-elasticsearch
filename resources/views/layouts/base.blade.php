@@ -19,7 +19,7 @@
 
     <title>@yield('title', config('app.name'))</title>
 
-    {{Html::favicon('img/favicon.png')}}
+    {{Html::favicon('https://www.elastic.co/favicon.ico')}}
 
     {!! Html::script('metronic/global/plugins/pace/pace.min.js') !!}
     {!! Html::style('metronic/global/plugins/pace/themes/pace-theme-flash.css') !!}

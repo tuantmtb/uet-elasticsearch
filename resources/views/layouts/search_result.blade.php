@@ -151,7 +151,7 @@
                                                                data-original-checked="false"
                                                                 @endif
                                                         >
-                                                        {{$element['text']}} ({{$element['count']}} bài)
+                                                        {{$element['text']}} ({{$element['count']}} bộ phim)
                                                     </label>
                                                 @endforeach
                                             </div>
