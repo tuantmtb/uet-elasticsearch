@@ -17,7 +17,7 @@ class VciConstants extends Facade
         'title' => 'Tiêu đề',
         'imdb_index' => 'IMDB',
         'production_year' => 'Năm sản xuất',
-        'info' => 'Thông tin',
+        'info' => 'Tóm tắt',
         'movie_id' => 'ID',
     ];
 
@@ -26,7 +26,7 @@ class VciConstants extends Facade
         'title' => 'Tiêu đề',
         'imdb_index' => 'IMDB',
         'production_year' => 'Năm sản xuất',
-        'info' => 'Thông tin',
+        'info' => 'Tóm tắt',
         'movie_id' => 'ID',
     ];
 
