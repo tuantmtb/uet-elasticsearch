@@ -39,6 +39,7 @@
         }
     };
 
+    @if(isset($statistics['years']))
     function yearsChart() {
         Highcharts.chart('years-chart', {
             title: {
@@ -86,9 +87,12 @@
             ]
         });
     }
+    @endif
 
     function initCharts() {
+        @if(isset($statistics['years']))
         yearsChart();
+        @endif
     }
 
     var bootbox_data = {
