@@ -110,15 +110,8 @@ Install manual
 
 #### Production
             
-            Index
-            
-            sudo php artisan db:seed --class=IndexArticleExecute
-            sudo php artisan db:seed --class=IndexJournalExecute
-            sudo php artisan db:seed --class=IndexOrganizeExecute
-            
+                        
 #### Infomation
-            
-            Slack: https://rd320-team.slack.com
             
             
 #### Other
@@ -136,14 +129,6 @@ Install manual
             $ composer dump-autoload
             $ php artisan db:seed hoặc $ php artisan migrate:refresh --seed
             
-2. Form không post được:
-
-            Thêm {{Form::token()}} vào trong form
-            
-3. Lỗi curl
-
-            Phải install sudo apt-get install php-curl
-            
 ## PhpStorm plugin instructions
     
             Settings > Plugins > Browse repositories... > Tìm 'Laravel plugin' > Cài 
@@ -152,19 +137,12 @@ Install manual
       
 ## Library
 
-        https://github.com/lazychaser/laravel-nestedset
-        watson/sitemap
-        phpoffice/phpword
-        maatwebsite/excel
-        zizaco/entrust
-# Teachers
-
-Vo Dinh Hieu - UET - hieuvd@vnu.edu.vn
-
 ## Developers
 
 Tran Minh Tuan - UET - tuantmtb@gmail.com
 
 Nguyen Van Nhat - UET - nguyenvannhat152@gmail.com
 
-Nguyen Bao Ngoc - UET - baongoc124@gmail.com
+Do Van Quang - UET 
+Nguyen Thi Lan - UET 
+

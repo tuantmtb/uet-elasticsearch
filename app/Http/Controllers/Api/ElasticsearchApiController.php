@@ -128,11 +128,11 @@ class ElasticsearchApiController extends Controller
 
     private function testModeSearch()
     {
-        $context["field"] = "title";
+        $context["field"] = "title"; // title, imdb_index, production_year, info, movie_id
         $context["text"] = "harry potter";
         $context["match_phrase"] = false;
 
-        $context["sort-col"] = "relevance"; //sort
+        $context["sort-col"] = "relevance"; //sort: relevance, year, title, imdb
         $context["sort-dir"] = "desc"; // sort
         $context["page"] = 0; // paginate offset
         $context["perPage"] = 10; // paginate
