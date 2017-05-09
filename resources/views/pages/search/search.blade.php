@@ -37,7 +37,7 @@
 @endsection
 
 @section('page-title')
-    Tìm kiếm
+    Tìm kiếm phim trong cơ sở dữ liệu của IMDB
 @endsection
 
 @section('page-body')
@@ -54,13 +54,15 @@
                                             {{Form::open(['method' => 'get', 'route' => 'search.article', 'class' => 'autotrim'])}}
                                             <div class="row">
                                                 <div class="col-sm-8 col-xs-12">
-                                                    <input type="text" name="text" class="form-control" placeholder="Nội dung tìm kiếm..." autofocus required>
+                                                    <input type="text" name="text" class="form-control"
+                                                           placeholder="Nội dung tìm kiếm..." autofocus required>
                                                 </div>
                                                 <div class="col-sm-2 col-xs-12">
                                                     {{Form::select('field', VciConstants::SEARCH_ARTICLE_FIELDS, null, ['class' => 'btn', 'style' => 'width: 100%'])}}
                                                 </div>
                                                 <div class="col-sm-2 col-xs-12">
-                                                    <button class="btn green uppercase bold" type="submit" style="width: 100%">
+                                                    <button class="btn green uppercase bold" type="submit"
+                                                            style="width: 100%">
                                                         <i class="fa fa-search"></i> Tìm kiếm
                                                     </button>
                                                 </div>
