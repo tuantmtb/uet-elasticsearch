@@ -14,26 +14,24 @@ class ExportIMDB extends Seeder
      */
     public function run()
     {
-//        $this->filmInfo();
-        $this->person();
+        $this->filmInfoAll();
     }
 
-    private function filmInfo()
+    private function filmInfoAll()
     {
         $size = 100;
         $count = 0;
         for ($offset = 0; $offset < 90556; $offset++) {
             $o = $offset * $size;
             $films = DB::select(DB::raw("
-          SELECT title, imdb_index, production_year, info, movie_id 
+          SELECT id, title, imdb_index, production_year, info, movie_id 
           from film_index
           limit  $o, $size 
          "));
             foreach ($films as $film) {
                 $count++;
-                Storage::disk('local')->put($film->movie_id . '.json', json_encode($film));
-                Log::debug($count . ' - id= ' . $film->movie_id);
-                $this->indexFilmElasticsearch($film->movie_id, 'film', $film);
+                Log::debug($count . ' - id= ' . $film->id);
+                $this->indexFilmElasticsearch($film->id, 'film_all', $film);
             }
         }
     }
@@ -58,23 +56,4 @@ class ExportIMDB extends Seeder
         }
     }
 
-    private function person()
-    {
-        $size = 100;
-        $count = 0;
-        for ($offset = 0; $offset < 6092031; $offset++) {
-            $o = $offset * $size;
-            $authors = DB::select(DB::raw("
-          SELECT id, name, imdb_index, imdb_id, gender 
-          from name
-          limit  $o, $size 
-         "));
-            foreach ($authors as $author) {
-                $count++;
-                Storage::disk('local')->put('author/' . $author->id . '.json', json_encode($author));
-                Log::debug($count . ' - id= ' . $author->id);
-                $this->indexFilmElasticsearch($author->id, 'author', $author);
-            }
-        }
-    }
 }
