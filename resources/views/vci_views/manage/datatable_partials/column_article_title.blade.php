@@ -1,1 +1,0 @@
-<a href="{!! route('article.show', $article->id) !!}">{{$article->title}}</a>
