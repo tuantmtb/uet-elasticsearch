@@ -1,33 +1,23 @@
-# VCI - Scholar
+# UET - Elasticsearch
 
-> Develop vci scholar
+> Develop uet elasticsearch
 
 ## Version
-Status: Release alpha version
+Status: Completed
 
-Submission date: 09/01/2017
-
-## Structure
-
-Resource doc: /resource-doc
-
-Resource doc contain: dump, elastsearch query sample
-
-## Document
-
-Detailed guides in /resource-doc older.
+Submission date: 09/05/2017
 
 
 ## Technology & Library
-Bootstrap
-
-Jquery
-
 Laravel 5
 
 Elastic search
 
-## Requirement system
+Redis
+
+Bootstrap
+
+Jquery
 
 ## Deployment
 
@@ -43,7 +33,6 @@ Ubuntu:
         
         In order to open access: set host: 0.0.0.0
 
-
 1. Create database
       
 2. Config file .env
@@ -52,7 +41,6 @@ Ubuntu:
         MAX_RESULT_SEARCH=2000
         
         - Config database
-        - Mailer account
         - Generate key
         $ php artisan key:generate
 
@@ -67,22 +55,14 @@ Install manual
         $ php artisan serve
         
         - Open browser localhost:8080
-        
-4. Account user
-
-        Admin account: 
-        
-## Development
+        ## Development
 
 #### Step 1: Install /vendor & /node_modules
             
             $ composer install
-            $ npm install
             
 #### Step 2: Database & migration
-            $ If imported sql -> skip step2, 3             
-            Tạo database uet-thesis
-            Copy .env.example > .env, cấu hình lại DB, MAIL (uet.thesis@gmail.com | thesis.uet)
+
             $ php artisan migrate --seed
             
 #### Step 3: Configurations
@@ -108,34 +88,10 @@ Install manual
             Log::info("messages")
             $ tail -f storage/logs/laravel.log | ccze -A
 
-#### Production
-            
-                        
-#### Infomation
-            
-            
 #### Other
             Seed db
-            php artisan db:seed --class=js_dump_db
-            
+            php artisan db:seed --class=CLASS_NAME
                 
-## Common problem
-
-1. Không seed migrate được:
-            edit ".env": set CACHE_DRIVER=array
-            $ php artisan config:cache
-            $ php artisan migrate:refresh --seed
-                        
-            $ composer dump-autoload
-            $ php artisan db:seed hoặc $ php artisan migrate:refresh --seed
-            
-## PhpStorm plugin instructions
-    
-            Settings > Plugins > Browse repositories... > Tìm 'Laravel plugin' > Cài 
-            Settings > Languages and Frameworks > Php > Laravel > Bật 'Enable plugin for this project'
-                
-      
-## Library
 
 ## Developers
 
@@ -144,5 +100,6 @@ Tran Minh Tuan - UET - tuantmtb@gmail.com
 Nguyen Van Nhat - UET - nguyenvannhat152@gmail.com
 
 Do Van Quang - UET 
+
 Nguyen Thi Lan - UET 
 
