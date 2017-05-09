@@ -5,7 +5,7 @@ use App\Models\User;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Database\Seeder;
 
-class ExportIMDB extends Seeder
+class ExportFilmIMDB extends Seeder
 {
     /**
      * Run the database seeds.
@@ -25,7 +25,7 @@ class ExportIMDB extends Seeder
             $o = $offset * $size;
             $films = DB::select(DB::raw("
           SELECT id, title, imdb_index, production_year, info, movie_id 
-          from film_index
+          from film_index_all
           limit  $o, $size 
          "));
             foreach ($films as $film) {

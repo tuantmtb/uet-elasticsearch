@@ -62,8 +62,8 @@ class ExportIMDB extends Seeder
     private function person()
     {
         $size = 100;
-        $count = 107175;
-        for ($offset = 107175; $offset < 6092031; $offset++) {
+        $count = 1007100;
+        for ($offset = 1071; $offset < 6092031; $offset++) {
             $o = $offset * $size;
             $authors = DB::select(DB::raw("
           SELECT id, name, imdb_index, imdb_id, gender 
@@ -72,7 +72,7 @@ class ExportIMDB extends Seeder
          "));
             foreach ($authors as $author) {
                 $count++;
-                Storage::disk('local')->put('author/' . $author->id . '.json', json_encode($author));
+//                Storage::disk('local')->put('author/' . $author->movie_id . '.json', json_encode($author));
                 Log::debug($count . ' - id= ' . $author->id);
                 $this->indexFilmElasticsearch($author->id, 'author', $author);
             }
