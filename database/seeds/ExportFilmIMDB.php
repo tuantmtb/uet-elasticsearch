@@ -39,6 +39,7 @@ class ExportIMDB extends Seeder
     public function indexFilmElasticsearch($id, $type, $data)
     {
         try {
+            $hosts = config('settings.elastic_search_ips');
             $params = [
                 'index' => 'imdb',
                 'type' => $type,
@@ -46,7 +47,7 @@ class ExportIMDB extends Seeder
                 'body' => $data
             ];
             $client = ClientBuilder::create()
-                ->setHosts(['112.137.131.9:9200'])// Set the hosts
+                ->setHosts($hosts)// Set the hosts
                 ->build();
 
             $response = $client->index($params);
